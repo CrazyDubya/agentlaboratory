@@ -40,7 +40,7 @@
         <div class="grid grid-2">
             {% for paper in papers %}
             <div class="card" style="margin-bottom: 0;">
-                <div style="display: flex; justify-content: between; align-items: flex-start; margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
                     <h4 style="color: var(--primary-color); margin-bottom: 0.5rem; flex: 1;">{{ paper.filename }}</h4>
                     {% if paper.text %}
                         <span style="background: var(--success-color); color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; margin-left: 1rem;">✓ Processed</span>
