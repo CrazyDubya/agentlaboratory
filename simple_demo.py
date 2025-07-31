@@ -123,8 +123,8 @@ def run_web_demo():
     """Run the web interface demo"""
     print("🚀 Starting Agent Laboratory Web Demo...")
     
-    # Create sample data
-    num_papers = create_sample_data()
+    # Sample data will be created after Flask app starts
+    num_papers = 3
     
     print("\n" + "="*70)
     print("🌐 AGENT LABORATORY WEB INTERFACE")
