@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+
+{% block title %}Research Demo - Agent Laboratory{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2 style="margin-bottom: 1.5rem; color: var(--primary-color); font-size: 2rem;">🚀 Interactive Research Demo</h2>
+    
+    <div style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); padding: 2rem; border-radius: 1rem; margin-bottom: 2rem;">
+        <h3 style="color: var(--primary-color); margin-bottom: 1rem;">Experience Agent Laboratory's Full Research Workflow</h3>
+        <p style="color: var(--text-color); line-height: 1.6; margin-bottom: 1.5rem;">
+            Agent Laboratory revolutionizes research by using specialized AI agents that collaborate through the entire research process. 
+            This demo showcases how our system can autonomously conduct literature reviews, formulate research plans, prepare datasets, 
+            run experiments, and write comprehensive reports.
+        </p>
+        
+        <div class="grid grid-2" style="margin-top: 1.5rem;">
+            <div style="background: white; padding: 1.5rem; border-radius: 0.75rem;">
+                <h4 style="color: var(--accent-color); margin-bottom: 1rem;">🧬 Multi-Agent Collaboration</h4>
+                <ul style="color: var(--text-color); line-height: 1.6; margin-left: 1rem;">
+                    <li>PhD Student Agent - Research execution</li>
+                    <li>Postdoc Agent - Strategic planning</li>
+                    <li>Professor Agent - Oversight & guidance</li>
+                    <li>ML Engineer Agent - Technical implementation</li>
+                    <li>Software Engineer Agent - Code development</li>
+                </ul>
+            </div>
+            <div style="background: white; padding: 1.5rem; border-radius: 0.75rem;">
+                <h4 style="color: var(--success-color); margin-bottom: 1rem;">📊 Complete Research Pipeline</h4>
+                <ul style="color: var(--text-color); line-height: 1.6; margin-left: 1rem;">
+                    <li>Literature Review & Paper Analysis</li>
+                    <li>Hypothesis Formation & Planning</li>
+                    <li>Data Preparation & Processing</li>
+                    <li>Experiment Design & Execution</li>
+                    <li>Results Analysis & Report Generation</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="color: var(--secondary-color); margin-bottom: 1.5rem;">🎯 Choose Your Research Scenario</h3>
+    
+    <div class="grid grid-2">
+        <div class="card" style="margin-bottom: 0; border: 2px solid var(--accent-color);">
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">📊</div>
+                <h4 style="color: var(--accent-color); margin-bottom: 1rem;">MATH Benchmark Research</h4>
+                <p style="color: var(--text-color); margin-bottom: 1.5rem; line-height: 1.6;">
+                    Explore novel prompting techniques to maximize performance on the MATH-500 dataset. 
+                    Our agents will conduct literature review, develop innovative approaches, and run comprehensive experiments.
+                </p>
+            </div>
+            
+            <div style="background: var(--background-color); padding: 1.5rem; border-radius: 0.75rem; margin-bottom: 1.5rem;">
+                <h5 style="color: var(--primary-color); margin-bottom: 1rem;">Research Highlights:</h5>
+                <ul style="color: var(--text-color); line-height: 1.6; margin-left: 1rem; font-size: 0.9rem;">
+                    <li>Baseline: 70.2% accuracy on MATH-500</li>
+                    <li>Novel prompting technique development</li>
+                    <li>Comprehensive evaluation on 500 test questions</li>
+                    <li>Parallelized experiment execution</li>
+                    <li>Publication-ready report generation</li>
+                </ul>
+            </div>
+            
+            <div style="text-align: center;">
+                <button onclick="startResearch('math')" class="btn" style="font-size: 1.1rem; padding: 1rem 2rem;">
+                    🚀 Start MATH Research
+                </button>
+            </div>
+        </div>
+        
+        <div class="card" style="margin-bottom: 0; border: 2px solid var(--success-color);">
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🧠</div>
+                <h4 style="color: var(--success-color); margin-bottom: 1rem;">Custom Research Topic</h4>
+                <p style="color: var(--text-color); margin-bottom: 1.5rem; line-height: 1.6;">
+                    Define your own research question and watch our agents collaborate to design and execute 
+                    a complete research project from literature review to final report.
+                </p>
+            </div>
+            
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; color: var(--text-color); margin-bottom: 0.5rem; font-weight: 500;">Research Topic:</label>
+                <textarea id="customTopic" placeholder="Enter your research idea (e.g., 'Develop a novel approach to improve language model reasoning capabilities using chain-of-thought prompting')" 
+                         style="width: 100%; min-height: 100px; padding: 1rem; border: 2px solid var(--border-color); border-radius: 0.5rem; resize: vertical; font-family: inherit;"></textarea>
+            </div>
+            
+            <div style="text-align: center;">
+                <button onclick="startCustomResearch()" class="btn btn-success" style="font-size: 1.1rem; padding: 1rem 2rem;">
+                    🔬 Start Custom Research
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="color: var(--secondary-color); margin-bottom: 1.5rem;">⚙️ Demo Configuration</h3>
+    
+    <div class="grid grid-3">
+        <div style="background: var(--background-color); padding: 1.5rem; border-radius: 0.75rem;">
+            <h4 style="color: var(--primary-color); margin-bottom: 1rem;">🤖 Agent Model</h4>
+            <select id="agentModel" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 0.5rem;">
+                <option value="o3-mini">o3-mini (Recommended)</option>
+                <option value="gpt-4o">GPT-4o</option>
+                <option value="deepseek-chat">DeepSeek v3</option>
+            </select>
+        </div>
+        
+        <div style="background: var(--background-color); padding: 1.5rem; border-radius: 0.75rem;">
+            <h4 style="color: var(--primary-color); margin-bottom: 1rem;">📚 Literature Papers</h4>
+            <select id="litPapers" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 0.5rem;">
+                <option value="3">3 Papers (Fast)</option>
+                <option value="5" selected>5 Papers (Balanced)</option>
+                <option value="7">7 Papers (Comprehensive)</option>
+            </select>
+        </div>
+        
+        <div style="background: var(--background-color); padding: 1.5rem; border-radius: 0.75rem;">
+            <h4 style="color: var(--primary-color); margin-bottom: 1rem;">🔬 Mode</h4>
+            <select id="demoMode" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 0.5rem;">
+                <option value="autonomous">Autonomous (Full Auto)</option>
+                <option value="interactive" selected>Interactive (Human-in-Loop)</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<div id="researchStatus" class="card" style="display: none;">
+    <h3 style="color: var(--warning-color); margin-bottom: 1.5rem;">🔄 Research in Progress</h3>
+    <div id="statusContent">
+        <!-- Dynamic status updates will appear here -->
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="color: var(--secondary-color); margin-bottom: 1.5rem;">📖 How Agent Laboratory Works</h3>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+        <div style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-radius: 0.75rem;">
+            <div style="font-size: 2.5rem; margin-bottom: 1rem;">📚</div>
+            <h4 style="color: var(--error-color); margin-bottom: 1rem;">1. Literature Review</h4>
+            <p style="color: var(--text-color); font-size: 0.9rem;">Agents search arXiv, analyze papers, and build comprehensive literature understanding</p>
+        </div>
+        
+        <div style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 0.75rem;">
+            <div style="font-size: 2.5rem; margin-bottom: 1rem;">🎯</div>
+            <h4 style="color: var(--warning-color); margin-bottom: 1rem;">2. Plan Formulation</h4>
+            <p style="color: var(--text-color); font-size: 0.9rem;">Collaborative planning between PhD and Postdoc agents to design experiments</p>
+        </div>
+        
+        <div style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-radius: 0.75rem;">
+            <div style="font-size: 2.5rem; margin-bottom: 1rem;">⚙️</div>
+            <h4 style="color: var(--accent-color); margin-bottom: 1rem;">3. Data & Experiments</h4>
+            <p style="color: var(--text-color); font-size: 0.9rem;">ML Engineers prepare datasets while Software Engineers implement solutions</p>
+        </div>
+        
+        <div style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 0.75rem;">
+            <div style="font-size: 2.5rem; margin-bottom: 1rem;">📊</div>
+            <h4 style="color: var(--success-color); margin-bottom: 1rem;">4. Analysis & Reporting</h4>
+            <p style="color: var(--text-color); font-size: 0.9rem;">Results interpretation and comprehensive report generation with LaTeX compilation</p>
+        </div>
+    </div>
+</div>
+
+<script>
+function startResearch(type) {
+    const statusDiv = document.getElementById('researchStatus');
+    const statusContent = document.getElementById('statusContent');
+    
+    statusDiv.style.display = 'block';
+    statusContent.innerHTML = `
+        <div style="text-align: center; padding: 2rem;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🚀</div>
+            <h4 style="color: var(--primary-color); margin-bottom: 1rem;">Launching ${type.toUpperCase()} Research Workflow</h4>
+            <p style="color: var(--text-color); margin-bottom: 2rem;">Initializing agents and preparing research environment...</p>
+            <div style="background: var(--warning-color); height: 4px; border-radius: 2px; overflow: hidden;">
+                <div style="background: white; height: 100%; width: 30%; animation: progress 3s ease-in-out infinite;"></div>
+            </div>
+        </div>
+    `;
+    
+    // Simulate research process
+    setTimeout(() => {
+        statusContent.innerHTML = `
+            <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); padding: 1.5rem; border-radius: 0.75rem;">
+                <h4 style="color: var(--success-color); margin-bottom: 1rem;">✅ Demo Configuration Ready</h4>
+                <p style="color: var(--text-color); margin-bottom: 1rem;">
+                    This is a demonstration of the Agent Laboratory interface. In the full system, this would launch 
+                    the complete research workflow with real AI agents collaborating on your research topic.
+                </p>
+                <div style="background: white; padding: 1rem; border-radius: 0.5rem; margin-top: 1rem;">
+                    <h5 style="color: var(--primary-color); margin-bottom: 0.5rem;">To run the actual research workflow:</h5>
+                    <code style="color: var(--text-color); background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 0.25rem;">
+                        python ai_lab_repo.py --yaml-location "experiment_configs/MATH_agentlab.yaml"
+                    </code>
+                </div>
+            </div>
+        `;
+    }, 3000);
+}
+
+function startCustomResearch() {
+    const topic = document.getElementById('customTopic').value.trim();
+    if (!topic) {
+        alert('Please enter a research topic first!');
+        return;
+    }
+    
+    const statusDiv = document.getElementById('researchStatus');
+    const statusContent = document.getElementById('statusContent');
+    
+    statusDiv.style.display = 'block';
+    statusContent.innerHTML = `
+        <div style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); padding: 1.5rem; border-radius: 0.75rem;">
+            <h4 style="color: var(--primary-color); margin-bottom: 1rem;">🧠 Custom Research Topic Configured</h4>
+            <div style="background: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                <strong>Research Topic:</strong> ${topic}
+            </div>
+            <p style="color: var(--text-color); margin-bottom: 1rem;">
+                Your custom research topic has been configured. The full Agent Laboratory system would now:
+            </p>
+            <ul style="color: var(--text-color); margin-left: 1.5rem; line-height: 1.6;">
+                <li>Search for relevant literature on arXiv and academic databases</li>
+                <li>Formulate specific research hypotheses and experimental plans</li>
+                <li>Prepare datasets and implement experimental code</li>
+                <li>Execute experiments and analyze results</li>
+                <li>Generate a comprehensive research report</li>
+            </ul>
+        </div>
+    `;
+}
+
+// Add CSS animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes progress {
+        0% { transform: translateX(-100%); }
+        50% { transform: translateX(400%); }
+        100% { transform: translateX(-100%); }
+    }
+`;
+document.head.appendChild(style);
+</script>
+{% endblock %}
