@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Search Papers - Agent Laboratory{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2 style="margin-bottom: 1.5rem; color: var(--primary-color); font-size: 2rem;">🔍 Semantic Paper Search</h2>
+    
+    <form method="GET" style="margin-bottom: 2rem;">
+        <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+            <input type="text" name="q" value="{{ query }}" placeholder="Enter your research query (e.g., 'machine learning optimization', 'neural networks', 'data analysis')"
+                   style="flex: 1; min-width: 300px; padding: 1rem; border: 2px solid var(--border-color); border-radius: 0.5rem; font-size: 1rem;">
+            <button type="submit" class="btn" style="padding: 1rem 2rem; white-space: nowrap;">
+                🔍 Search Papers
+            </button>
+        </div>
+    </form>
+
+    {% if query %}
+        <div style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); padding: 1.5rem; border-radius: 0.75rem; margin-bottom: 2rem;">
+            <h3 style="color: var(--primary-color); margin-bottom: 0.5rem;">Search Results for: "{{ query }}"</h3>
+            <p style="color: var(--text-color);">
+                {% if papers %}
+                    Found {{ papers|length }} relevant papers using {% if search_enabled %}semantic similarity matching{% else %}text matching (offline mode){% endif %}
+                {% else %}
+                    No papers found matching your query. Try different keywords or upload more papers.
+                {% endif %}
+            </p>
+            {% if not search_enabled %}
+                <div style="background: #fef3c7; padding: 1rem; border-radius: 0.5rem; margin-top: 1rem; border-left: 4px solid var(--warning-color);">
+                    <strong>⚠️ Limited Search Mode:</strong> Semantic search is currently disabled. Using basic text matching instead.
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {% if papers %}
+        <div class="grid grid-1" style="grid-template-columns: 1fr;">
+            {% for paper, score in papers %}
+            <div class="card" style="margin-bottom: 0; border-left: 4px solid {% if score > 0.7 %}var(--success-color){% elif score > 0.5 %}var(--warning-color){% else %}var(--accent-color){% endif %};">
+                <div style="display: flex; justify-content: between; align-items: flex-start; margin-bottom: 1rem;">
+                    <div style="flex: 1;">
+                        <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">{{ paper.filename }}</h4>
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <span style="background: {% if score > 0.7 %}var(--success-color){% elif score > 0.5 %}var(--warning-color){% else %}var(--accent-color){% endif %}; color: white; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.85rem; font-weight: 500;">
+                                {{ "%.1f"|format(score * 100) }}% Match
+                            </span>
+                            <span style="color: #6b7280; font-size: 0.9rem;">
+                                {% if score > 0.7 %}🎯 Highly Relevant
+                                {% elif score > 0.5 %}📊 Moderately Relevant
+                                {% else %}📋 Somewhat Relevant
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if paper.text %}
+                    <p style="color: var(--text-color); margin-bottom: 1.5rem; line-height: 1.6; background: var(--background-color); padding: 1rem; border-radius: 0.5rem;">
+                        {{ paper.text[:300] }}{% if paper.text|length > 300 %}...{% endif %}
+                    </p>
+                {% endif %}
+                
+                <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                    <a href="/view/{{ paper.id }}" class="btn" style="font-size: 0.9rem; padding: 0.6rem 1.2rem;">👁️ View Full Paper</a>
+                    <a href="/search?q={{ paper.filename }}" class="btn btn-secondary" style="font-size: 0.9rem; padding: 0.6rem 1.2rem;">🔗 Find Similar</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% elif query %}
+        <div style="text-align: center; padding: 3rem; background: linear-gradient(135deg, #f8fafc 0%, #fee2e2 100%); border-radius: 1rem; border: 2px dashed #fca5a5;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
+            <h3 style="color: var(--text-color); margin-bottom: 1rem;">No matching papers found</h3>
+            <p style="color: #6b7280; margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+                Your search didn't return any results. Try using different keywords, broader terms, or upload more papers to search through.
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="/upload" class="btn btn-success">📤 Upload More Papers</a>
+                <a href="/" class="btn">📚 Browse Library</a>
+            </div>
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 3rem; background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%); border-radius: 1rem;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">🔍</div>
+            <h3 style="color: var(--text-color); margin-bottom: 1rem;">Intelligent Paper Search</h3>
+            <p style="color: #6b7280; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                Use natural language queries to find relevant papers in your library. Our semantic search understands context and meaning, not just keywords.
+            </p>
+            
+            <div style="background: white; padding: 1.5rem; border-radius: 0.75rem; margin: 2rem auto; max-width: 500px; text-align: left;">
+                <h4 style="color: var(--primary-color); margin-bottom: 1rem;">💡 Search Examples:</h4>
+                <ul style="color: var(--text-color); line-height: 1.8;">
+                    <li>"neural network optimization techniques"</li>
+                    <li>"natural language processing applications"</li>
+                    <li>"data analysis and visualization methods"</li>
+                    <li>"machine learning in healthcare"</li>
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+{% if not query %}
+<div class="card">
+    <h3 style="color: var(--secondary-color); margin-bottom: 1.5rem;">🚀 Powered by AI</h3>
+    <div class="grid grid-2">
+        <div style="padding: 1.5rem; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 0.75rem;">
+            <h4 style="color: var(--success-color); margin-bottom: 1rem;">🧠 Semantic Understanding</h4>
+            <p>Our search uses advanced sentence transformers to understand the meaning and context of your queries, finding relevant papers even when exact keywords don't match.</p>
+        </div>
+        <div style="padding: 1.5rem; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 0.75rem;">
+            <h4 style="color: var(--warning-color); margin-bottom: 1rem;">📊 Relevance Scoring</h4>
+            <p>Each result includes a similarity score showing how well it matches your query, helping you quickly identify the most relevant papers.</p>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

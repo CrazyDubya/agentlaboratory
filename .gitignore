@@ -14,3 +14,27 @@ state_saves/*
 __pycache__/*
 Figure*.png
 testrun.py
+# Demo specific files
+uploads/
+instance/
+demo_data/
+demo_research_output/
+MATH_research_dir/
+_tmp_*.pdf
+agent_times_*.txt
+
+# LaTeX build files
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3

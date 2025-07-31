@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Paper Library - Agent Laboratory{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2 style="margin-bottom: 1.5rem; color: var(--primary-color); font-size: 2rem;">📚 Research Paper Library</h2>
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+        <p style="color: var(--text-color); font-size: 1.1rem;">
+            Welcome to Agent Laboratory! This is your central hub for AI-powered research assistance.
+        </p>
+        <div style="display: flex; gap: 1rem;">
+            <a href="/upload" class="btn btn-success">📤 Upload Papers</a>
+            <a href="/demo" class="btn btn-warning">🚀 Start Research Demo</a>
+        </div>
+    </div>
+
+    {% if papers %}
+        <div style="background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%); padding: 1.5rem; border-radius: 0.75rem; margin-bottom: 2rem;">
+            <h3 style="color: var(--primary-color); margin-bottom: 1rem;">📊 Library Statistics</h3>
+            <div class="grid grid-3">
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; font-weight: bold; color: var(--accent-color);">{{ papers|length }}</div>
+                    <div style="color: var(--text-color);">Total Papers</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; font-weight: bold; color: var(--success-color);">{{ papers|selectattr("text")|list|length }}</div>
+                    <div style="color: var(--text-color);">Processed Papers</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; font-weight: bold; color: var(--warning-color);">{{ (papers|selectattr("text")|list|length / papers|length * 100)|round|int if papers|length > 0 else 0 }}%</div>
+                    <div style="color: var(--text-color);">Processing Rate</div>
+                </div>
+            </div>
+        </div>
+
+        <h3 style="color: var(--secondary-color); margin-bottom: 1.5rem; font-size: 1.5rem;">📄 Available Papers</h3>
+        
+        <div class="grid grid-2">
+            {% for paper in papers %}
+            <div class="card" style="margin-bottom: 0;">
+                <div style="display: flex; justify-content: between; align-items: flex-start; margin-bottom: 1rem;">
+                    <h4 style="color: var(--primary-color); margin-bottom: 0.5rem; flex: 1;">{{ paper.filename }}</h4>
+                    {% if paper.text %}
+                        <span style="background: var(--success-color); color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; margin-left: 1rem;">✓ Processed</span>
+                    {% else %}
+                        <span style="background: var(--warning-color); color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem; margin-left: 1rem;">⏳ Processing</span>
+                    {% endif %}
+                </div>
+                
+                {% if paper.text %}
+                    <p style="color: var(--text-color); margin-bottom: 1rem; line-height: 1.5;">
+                        {{ paper.text[:200] }}{% if paper.text|length > 200 %}...{% endif %}
+                    </p>
+                {% else %}
+                    <p style="color: #6b7280; font-style: italic; margin-bottom: 1rem;">Text extraction in progress...</p>
+                {% endif %}
+                
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <a href="/view/{{ paper.id }}" class="btn" style="font-size: 0.9rem; padding: 0.5rem 1rem;">👁️ View PDF</a>
+                    {% if paper.text %}
+                        <a href="/search?q={{ paper.filename }}" class="btn btn-secondary" style="font-size: 0.9rem; padding: 0.5rem 1rem;">🔍 Find Similar</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 3rem; background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%); border-radius: 1rem; border: 2px dashed var(--border-color);">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">📚</div>
+            <h3 style="color: var(--text-color); margin-bottom: 1rem;">No papers in your library yet</h3>
+            <p style="color: #6b7280; margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+                Start building your research library by uploading PDF papers. Agent Laboratory will automatically extract and index the content for intelligent search and analysis.
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="/upload" class="btn btn-success">📤 Upload Your First Paper</a>
+                <a href="/demo" class="btn btn-warning">🚀 Try the Demo</a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+{% if papers %}
+<div class="card">
+    <h3 style="color: var(--secondary-color); margin-bottom: 1.5rem;">🔬 What's Next?</h3>
+    <div class="grid grid-2">
+        <div style="padding: 1.5rem; background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-radius: 0.75rem;">
+            <h4 style="color: var(--primary-color); margin-bottom: 1rem;">🔍 Search & Discover</h4>
+            <p style="margin-bottom: 1rem;">Use semantic search to find relevant papers and connections in your library.</p>
+            <a href="/search" class="btn">Start Searching</a>
+        </div>
+        <div style="padding: 1.5rem; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 0.75rem;">
+            <h4 style="color: var(--warning-color); margin-bottom: 1rem;">🚀 AI Research Demo</h4>
+            <p style="margin-bottom: 1rem;">Experience the full Agent Laboratory workflow with our interactive research demo.</p>
+            <a href="/demo" class="btn btn-warning">Launch Demo</a>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

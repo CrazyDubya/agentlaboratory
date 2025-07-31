@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Papers - Agent Laboratory{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2 style="margin-bottom: 1.5rem; color: var(--primary-color); font-size: 2rem;">📤 Upload Research Papers</h2>
+    
+    <div style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); padding: 1.5rem; border-radius: 0.75rem; margin-bottom: 2rem;">
+        <h3 style="color: var(--primary-color); margin-bottom: 1rem;">How it works:</h3>
+        <ol style="color: var(--text-color); line-height: 1.8; margin-left: 1.5rem;">
+            <li>Upload your PDF research papers</li>
+            <li>Agent Laboratory automatically extracts and processes the text</li>
+            <li>Content is indexed for intelligent search and analysis</li>
+            <li>Use papers in AI-powered research workflows</li>
+        </ol>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data" style="background: var(--background-color); padding: 2rem; border-radius: 1rem; border: 2px dashed var(--border-color);">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <div style="font-size: 3rem; color: var(--accent-color); margin-bottom: 1rem;">📄</div>
+            <h3 style="color: var(--text-color); margin-bottom: 0.5rem;">Select PDF Files to Upload</h3>
+            <p style="color: #6b7280;">Choose one or more research papers in PDF format</p>
+        </div>
+
+        <div style="margin-bottom: 2rem;">
+            <input type="file" name="pdf" accept=".pdf" required
+                   style="width: 100%; padding: 1rem; border: 2px solid var(--border-color); border-radius: 0.5rem; background: white; font-size: 1rem; color: var(--text-color);">
+        </div>
+
+        <div style="text-align: center;">
+            <button type="submit" class="btn btn-success" style="font-size: 1.1rem; padding: 1rem 2rem;">
+                📤 Upload and Process Paper
+            </button>
+        </div>
+    </form>
+
+    <div style="margin-top: 2rem; padding: 1.5rem; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 0.75rem;">
+        <h3 style="color: var(--success-color); margin-bottom: 1rem;">💡 Tips for best results:</h3>
+        <ul style="color: var(--text-color); line-height: 1.8; margin-left: 1.5rem;">
+            <li>Upload high-quality PDF files with clear text (not scanned images)</li>
+            <li>Academic papers, research reports, and technical documents work best</li>
+            <li>File processing may take a few moments depending on document length</li>
+            <li>Uploaded papers become searchable and can be used in research workflows</li>
+        </ul>
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="color: var(--secondary-color); margin-bottom: 1.5rem;">🔬 After Upload</h3>
+    <div class="grid grid-2">
+        <div style="padding: 1.5rem; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 0.75rem;">
+            <h4 style="color: var(--warning-color); margin-bottom: 1rem;">🔍 Search Your Papers</h4>
+            <p style="margin-bottom: 1rem;">Use semantic search to find relevant content and discover connections between papers.</p>
+            <a href="/search" class="btn btn-warning">Go to Search</a>
+        </div>
+        <div style="padding: 1.5rem; background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); border-radius: 0.75rem;">
+            <h4 style="color: var(--accent-color); margin-bottom: 1rem;">📚 View Library</h4>
+            <p style="margin-bottom: 1rem;">Browse all your uploaded papers and track processing status.</p>
+            <a href="/" class="btn">Back to Library</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

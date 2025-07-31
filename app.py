@@ -59,7 +59,15 @@ def update_papers_from_uploads():
     #raise Exception("FAILED TO UPDATE")
 
 # Load a pre-trained sentence transformer model
-model = SentenceTransformer('all-MiniLM-L6-v2')
+try:
+    model = SentenceTransformer('all-MiniLM-L6-v2')
+    SEARCH_ENABLED = True
+    print("✅ Sentence transformer model loaded successfully")
+except Exception as e:
+    print(f"⚠️ Could not load sentence transformer model: {e}")
+    print("   Semantic search will be disabled in offline mode")
+    model = None
+    SEARCH_ENABLED = False
 
 @app.route('/update', methods=['GET'])
 def update_on_demand():
@@ -106,17 +114,40 @@ def upload():
 def search():
     query = request.args.get('q', '')
     if query:
-        papers = Paper.query.all()
-        query_embedding = model.encode([query])
-        paper_texts = [paper.text for paper in papers if paper.text]
-        if not paper_texts:
-            return render_template('search.html', papers=[], query=query)
-        paper_embeddings = model.encode(paper_texts)
-        similarities = cosine_similarity(query_embedding, paper_embeddings)[0]
-        papers_with_scores = list(zip([p for p in papers if p.text], similarities))
-        papers_sorted = sorted(papers_with_scores, key=lambda x: x[1], reverse=True)
-        return render_template('search.html', papers=papers_sorted, query=query)
-    return render_template('search.html', papers=[], query=query)
+        if not SEARCH_ENABLED:
+            # Fallback: simple text matching when semantic search is not available
+            papers = Paper.query.all()
+            papers_with_scores = []
+            query_lower = query.lower()
+            
+            for paper in papers:
+                if paper.text:
+                    # Simple text matching score
+                    text_lower = paper.text.lower()
+                    # Count occurrences of query words
+                    query_words = query_lower.split()
+                    matches = sum(text_lower.count(word) for word in query_words)
+                    if matches > 0:
+                        # Normalize score between 0 and 1
+                        score = min(matches * 0.1, 1.0)
+                        papers_with_scores.append((paper, score))
+            
+            papers_sorted = sorted(papers_with_scores, key=lambda x: x[1], reverse=True)
+            
+        else:
+            # Use semantic search when available
+            papers = Paper.query.all()
+            query_embedding = model.encode([query])
+            paper_texts = [paper.text for paper in papers if paper.text]
+            if not paper_texts:
+                return render_template('search.html', papers=[], query=query)
+            paper_embeddings = model.encode(paper_texts)
+            similarities = cosine_similarity(query_embedding, paper_embeddings)[0]
+            papers_with_scores = list(zip([p for p in papers if p.text], similarities))
+            papers_sorted = sorted(papers_with_scores, key=lambda x: x[1], reverse=True)
+            
+        return render_template('search.html', papers=papers_sorted, query=query, search_enabled=SEARCH_ENABLED)
+    return render_template('search.html', papers=[], query=query, search_enabled=SEARCH_ENABLED)
 
 @app.route('/api/search')
 def api_search():
@@ -126,14 +157,34 @@ def api_search():
     papers = Paper.query.all()
     if not papers:
         return jsonify({'query': query, 'results': []})
-    query_embedding = model.encode([query])
-    paper_texts = [paper.text for paper in papers if paper.text]
-    if not paper_texts:
-        return jsonify({'query': query, 'results': []})
-    paper_embeddings = model.encode(paper_texts)
-    similarities = cosine_similarity(query_embedding, paper_embeddings)[0]
-    papers_with_scores = list(zip([p for p in papers if p.text], similarities))
-    papers_sorted = sorted(papers_with_scores, key=lambda x: x[1], reverse=True)
+        
+    if not SEARCH_ENABLED:
+        # Fallback: simple text matching
+        papers_with_scores = []
+        query_lower = query.lower()
+        
+        for paper in papers:
+            if paper.text:
+                text_lower = paper.text.lower()
+                query_words = query_lower.split()
+                matches = sum(text_lower.count(word) for word in query_words)
+                if matches > 0:
+                    score = min(matches * 0.1, 1.0)
+                    papers_with_scores.append((paper, score))
+        
+        papers_sorted = sorted(papers_with_scores, key=lambda x: x[1], reverse=True)
+        
+    else:
+        # Use semantic search when available
+        query_embedding = model.encode([query])
+        paper_texts = [paper.text for paper in papers if paper.text]
+        if not paper_texts:
+            return jsonify({'query': query, 'results': []})
+        paper_embeddings = model.encode(paper_texts)
+        similarities = cosine_similarity(query_embedding, paper_embeddings)[0]
+        papers_with_scores = list(zip([p for p in papers if p.text], similarities))
+        papers_sorted = sorted(papers_with_scores, key=lambda x: x[1], reverse=True)
+        
     results = []
     for paper, score in papers_sorted:
         pdf_url = url_for('uploaded_file', filename=paper.filename, _external=True)
@@ -143,7 +194,7 @@ def api_search():
             'similarity': float(score),
             'pdf_url': pdf_url
         })
-    return jsonify({'query': query, 'results': results})
+    return jsonify({'query': query, 'results': results, 'search_mode': 'semantic' if SEARCH_ENABLED else 'text_matching'})
 
 @app.route('/uploads/<path:filename>')
 def uploaded_file(filename):
@@ -154,6 +205,10 @@ def view_pdf(paper_id):
     paper = Paper.query.get_or_404(paper_id)
     pdf_url = url_for('uploaded_file', filename=paper.filename, _external=True)
     return render_template('view.html', paper=paper, pdf_url=pdf_url)
+
+@app.route('/demo')
+def demo():
+    return render_template('demo.html')
 
 
 def run_app(port=5000):

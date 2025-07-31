@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}View Paper - Agent Laboratory{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: between; align-items: flex-start; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+        <div style="flex: 1;">
+            <h2 style="color: var(--primary-color); margin-bottom: 0.5rem; font-size: 2rem;">📄 {{ paper.filename }}</h2>
+            <p style="color: #6b7280;">Research Paper Viewer</p>
+        </div>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <a href="{{ pdf_url }}" target="_blank" class="btn" style="white-space: nowrap;">🔗 Open PDF</a>
+            <a href="/search?q={{ paper.filename }}" class="btn btn-secondary" style="white-space: nowrap;">🔍 Find Similar</a>
+            <a href="/" class="btn btn-warning" style="white-space: nowrap;">📚 Back to Library</a>
+        </div>
+    </div>
+
+    {% if paper.text %}
+        <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); padding: 1.5rem; border-radius: 0.75rem; margin-bottom: 2rem;">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <span style="background: var(--success-color); color: white; padding: 0.5rem; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">✓</span>
+                <div>
+                    <h3 style="color: var(--success-color); margin-bottom: 0.25rem;">Text Successfully Extracted</h3>
+                    <p style="color: var(--text-color); margin: 0;">{{ paper.text|length }} characters processed and indexed</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="background: white; border: 2px solid var(--border-color); border-radius: 1rem; overflow: hidden;">
+            <div style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); color: white; padding: 1rem;">
+                <h3 style="margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                    📖 Extracted Text Content
+                </h3>
+            </div>
+            <div style="padding: 2rem; max-height: 600px; overflow-y: auto;">
+                <div style="font-family: 'Georgia', serif; line-height: 1.8; color: var(--text-color); white-space: pre-wrap;">{{ paper.text }}</div>
+            </div>
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 3rem; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 1rem; border: 2px dashed var(--warning-color);">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">⏳</div>
+            <h3 style="color: var(--warning-color); margin-bottom: 1rem;">Text Extraction in Progress</h3>
+            <p style="color: var(--text-color); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+                We're currently processing this PDF to extract and index the text content. This usually takes just a few moments.
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="{{ pdf_url }}" target="_blank" class="btn">📄 View Original PDF</a>
+                <button onclick="window.location.reload()" class="btn btn-secondary">🔄 Refresh Status</button>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h3 style="color: var(--secondary-color); margin-bottom: 1.5rem;">🔬 What's Next?</h3>
+    <div class="grid grid-3">
+        <div style="padding: 1.5rem; background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-radius: 0.75rem; text-align: center;">
+            <div style="font-size: 2rem; margin-bottom: 1rem;">🔍</div>
+            <h4 style="color: var(--primary-color); margin-bottom: 1rem;">Search Similar Papers</h4>
+            <p style="margin-bottom: 1rem; font-size: 0.9rem;">Find related research using semantic search</p>
+            <a href="/search?q={{ paper.filename }}" class="btn" style="font-size: 0.9rem;">Start Search</a>
+        </div>
+        <div style="padding: 1.5rem; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 0.75rem; text-align: center;">
+            <div style="font-size: 2rem; margin-bottom: 1rem;">📤</div>
+            <h4 style="color: var(--success-color); margin-bottom: 1rem;">Upload More Papers</h4>
+            <p style="margin-bottom: 1rem; font-size: 0.9rem;">Build your research library</p>
+            <a href="/upload" class="btn btn-success" style="font-size: 0.9rem;">Upload Papers</a>
+        </div>
+        <div style="padding: 1.5rem; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 0.75rem; text-align: center;">
+            <div style="font-size: 2rem; margin-bottom: 1rem;">🚀</div>
+            <h4 style="color: var(--warning-color); margin-bottom: 1rem;">Try Research Demo</h4>
+            <p style="margin-bottom: 1rem; font-size: 0.9rem;">Experience AI-powered research workflow</p>
+            <a href="/demo" class="btn btn-warning" style="font-size: 0.9rem;">Launch Demo</a>
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-refresh page if text extraction is in progress
+{% if not paper.text %}
+setTimeout(function() {
+    window.location.reload();
+}, 30000); // Refresh every 30 seconds
+{% endif %}
+</script>
+{% endblock %}
