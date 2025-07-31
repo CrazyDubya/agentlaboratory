@@ -61,14 +61,16 @@ def update_papers_from_uploads():
 # Load a pre-trained sentence transformer model
 try:
     model = SentenceTransformer('all-MiniLM-L6-v2')
-    SEARCH_ENABLED = True
-    print("✅ Sentence transformer model loaded successfully")
+    model_loaded = True
 except Exception as e:
     print(f"⚠️ Could not load sentence transformer model: {e}")
     print("   Semantic search will be disabled in offline mode")
     model = None
-    SEARCH_ENABLED = False
+    model_loaded = False
 
+SEARCH_ENABLED = model_loaded
+if SEARCH_ENABLED:
+    print("✅ Sentence transformer model loaded successfully")
 @app.route('/update', methods=['GET'])
 def update_on_demand():
     update_papers_from_uploads()
