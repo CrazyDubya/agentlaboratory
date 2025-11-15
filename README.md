@@ -166,7 +166,7 @@ If you would like to get in touch, feel free to reach out to [sschmi46@jhu.edu](
 ```bibtex
 @misc{schmidgall2025agentlaboratoryusingllm,
       title={Agent Laboratory: Using LLM Agents as Research Assistants}, 
-      author={Samuel Schmidgall and Yusheng Su and Ze Wang and Ximeng Sun and Jialian Wu and Xiaodong Yu and Jiang Liu and Zicheng Liu and Emad Barsoum},
+      author={Samuel Schmidgall and Yusheng Su and Ze Wang and Ximeng Sun and Jialian Wu and Xiaodong Yu and Jiang Liu and Michael Moor and Zicheng Liu and Emad Barsoum},
       year={2025},
       eprint={2501.04227},
       archivePrefix={arXiv},
